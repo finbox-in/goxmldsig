@@ -1,7 +1,7 @@
 # goxmldsig
 
-![Build Status](https://github.com/russellhaering/goxmldsig/actions/workflows/test.yml/badge.svg?branch=main)
-[![GoDoc](https://godoc.org/github.com/russellhaering/goxmldsig?status.svg)](https://godoc.org/github.com/russellhaering/goxmldsig)
+![Build Status](https://github.com/finbox-in/goxmldsig/actions/workflows/test.yml/badge.svg?branch=main)
+[![GoDoc](https://godoc.org/github.com/finbox-in/goxmldsig?status.svg)](https://godoc.org/github.com/finbox-in/goxmldsig)
 
 XML Digital Signatures implemented in pure Go.
 
@@ -10,16 +10,16 @@ XML Digital Signatures implemented in pure Go.
 Install `goxmldsig` using `go get`:
 
 ```
-$ go get github.com/russellhaering/goxmldsig
+$ go get github.com/finbox-in/goxmldsig
 ```
 
 ## Usage
 
-Include the [`types.Signature`](https://pkg.go.dev/github.com/russellhaering/goxmldsig/types#Signature) struct from this package in your application messages.
+Include the [`types.Signature`](https://pkg.go.dev/github.com/finbox-in/goxmldsig/types#Signature) struct from this package in your application messages.
 
 ```go
 import (
-    sigtypes "github.com/russellhaering/goxmldsig/types"
+    sigtypes "github.com/finbox-in/goxmldsig/types"
 )
 
 type AppHdr struct {
@@ -35,7 +35,7 @@ package main
 
 import (
     "github.com/beevik/etree"
-    "github.com/russellhaering/goxmldsig"
+    "github.com/finbox-in/goxmldsig"
 )
 
 func main() {

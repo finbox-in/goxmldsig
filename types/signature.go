@@ -80,6 +80,11 @@ type Signature struct {
 	el             *etree.Element
 }
 
+type PersonalInfoValidation struct {
+	MobileMatch bool `json:"mobile_match"`
+	EmailMatch  bool `json:"email_match"`
+}
+
 // SetUnderlyingElement will be called with a reference to the Element this Signature
 // was unmarshaled from.
 func (s *Signature) SetUnderlyingElement(el *etree.Element) {
