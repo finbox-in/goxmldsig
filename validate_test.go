@@ -251,7 +251,7 @@ func testValidateDoc(t *testing.T, doc *etree.Document, certPEM string) {
 	vc := NewDefaultValidationContext(&certStore)
 	vc.Clock = NewFakeClockAt(cert.NotBefore)
 
-	el, _, err := vc.Validate(doc.Root())
+	el, err := vc.Validate(doc.Root())
 	require.NoError(t, err)
 	require.NotEmpty(t, el)
 }
@@ -307,7 +307,7 @@ func TestValidateWithValid(t *testing.T) {
 	}
 	vc := NewDefaultValidationContext(&certStore)
 
-	el, _, err := vc.Validate(doc.Root())
+	el, err := vc.Validate(doc.Root())
 	require.NoError(t, err)
 	require.NotEmpty(t, el)
 }
@@ -326,7 +326,7 @@ func TestValidateWithModified(t *testing.T) {
 	}
 	vc := NewDefaultValidationContext(&certStore)
 
-	_, _, err = vc.Validate(doc.Root())
+	_, err = vc.Validate(doc.Root())
 	require.Error(t, err)
 }
 
@@ -344,7 +344,7 @@ func TestValidateWithModifiedAndSignatureEdited(t *testing.T) {
 	}
 	vc := NewDefaultValidationContext(&certStore)
 
-	_, _, err = vc.Validate(doc.Root())
+	_, err = vc.Validate(doc.Root())
 	require.Error(t, err)
 }
 

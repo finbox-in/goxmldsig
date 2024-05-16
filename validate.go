@@ -2,10 +2,8 @@ package dsig
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"regexp"
@@ -301,36 +299,6 @@ func (ctx *ValidationContext) validateSignature(el *etree.Element, sig *types.Si
 	return transformed, nil
 }
 
-func (ctx *ValidationContext) validatePersonalInfo(el *etree.Element) types.PersonalInfoValidation {
-	mobile := el.FindElement("//Poi").SelectAttrValue("m", "default-mobile")
-	email := el.FindElement("//Poi").SelectAttrValue("e", "default-email")
-	aadhaarLastDigit := ctx.AadhaarLastDigit
-	if ctx.AadhaarLastDigit == 0 {
-		aadhaarLastDigit = 1
-	}
-	var response types.PersonalInfoValidation
-
-	if mobile != "default-mobile" {
-		lastInput := ctx.Mobile + ctx.ShareCode
-		for i := 0; i < aadhaarLastDigit; i++ {
-			h := sha256.Sum256([]byte(lastInput))
-			lastInput = hex.EncodeToString(h[:])
-		}
-		response.MobileMatch = lastInput == mobile
-	}
-
-	if email != "default-email" {
-		lastInput := ctx.Email + ctx.ShareCode
-		for i := 0; i < aadhaarLastDigit; i++ {
-			h := sha256.Sum256([]byte(lastInput))
-			lastInput = hex.EncodeToString(h[:])
-		}
-		response.EmailMatch = lastInput == email
-	}
-
-	return response
-}
-
 func contains(roots []*x509.Certificate, cert *x509.Certificate) bool {
 	for _, root := range roots {
 		if root.Equal(cert) {
@@ -508,26 +476,19 @@ func (ctx *ValidationContext) verifyCertificate(sig *types.Signature) (*x509.Cer
 
 // Validate verifies that the passed element contains a valid enveloped signature
 // matching a currently-valid certificate in the context's CertificateStore.
-func (ctx *ValidationContext) Validate(el *etree.Element) (*etree.Element, *types.PersonalInfoValidation, error) {
+func (ctx *ValidationContext) Validate(el *etree.Element) (*etree.Element, error) {
 	// Make a copy of the element to avoid mutating the one we were passed.
 	el = el.Copy()
 
 	sig, err := ctx.findSignature(el)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	cert, err := ctx.verifyCertificate(sig)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	validateSignature, err := ctx.validateSignature(el, sig, cert)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	personalInfo := ctx.validatePersonalInfo(validateSignature)
-
-	return validateSignature, &personalInfo, err
+	return ctx.validateSignature(el, sig, cert)
 }
