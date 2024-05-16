@@ -1,4 +1,4 @@
-# I've spent days trying to wrap my mind over UIDAI's broken documentation. Please don't waste yours. Use this snippet to validate Aadhaar Mobile and Email. Hail UIDAI 🙏
+# I've spent days trying to wrap my mind over UIDAI's broken documentation. Please don't waste yours. Use this snippet to validate Aadhaar Mobile and Email.
 
 ```go
 type PersonalInfoValidation struct {
