@@ -27,20 +27,12 @@ type ValidationContext struct {
 	CertificateStore X509CertificateStore
 	IdAttribute      string
 	Clock            *Clock
-	Mobile           string
-	Email            string
-	ShareCode        string
-	AadhaarLastDigit int
 }
 
-func NewUidaiOKYCValidationContext(certificateStore X509CertificateStore, mobile, email, shareCode string, aadhaarLastDigit int) *ValidationContext {
+func NewUidaiOKYCValidationContext(certificateStore X509CertificateStore) *ValidationContext {
 	return &ValidationContext{
 		CertificateStore: certificateStore,
 		IdAttribute:      DefaultIdAttr,
-		Mobile:           mobile,
-		Email:            email,
-		ShareCode:        shareCode,
-		AadhaarLastDigit: aadhaarLastDigit,
 	}
 }
 
