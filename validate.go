@@ -9,8 +9,8 @@ import (
 	"regexp"
 
 	"github.com/beevik/etree"
-	"github.com/russellhaering/goxmldsig/etreeutils"
-	"github.com/russellhaering/goxmldsig/types"
+	"github.com/finbox-in/goxmldsig/etreeutils"
+	"github.com/finbox-in/goxmldsig/types"
 )
 
 var uriRegexp = regexp.MustCompile("^#[a-zA-Z_][\\w.-]*$")
@@ -27,6 +27,13 @@ type ValidationContext struct {
 	CertificateStore X509CertificateStore
 	IdAttribute      string
 	Clock            *Clock
+}
+
+func NewUidaiOKYCValidationContext(certificateStore X509CertificateStore) *ValidationContext {
+	return &ValidationContext{
+		CertificateStore: certificateStore,
+		IdAttribute:      DefaultIdAttr,
+	}
 }
 
 func NewDefaultValidationContext(certificateStore X509CertificateStore) *ValidationContext {
@@ -418,7 +425,6 @@ func (ctx *ValidationContext) findSignature(root *etree.Element) (*types.Signatu
 }
 
 func (ctx *ValidationContext) verifyCertificate(sig *types.Signature) (*x509.Certificate, error) {
-	now := ctx.Clock.Now()
 
 	roots, err := ctx.CertificateStore.Certificates()
 	if err != nil {
@@ -455,10 +461,6 @@ func (ctx *ValidationContext) verifyCertificate(sig *types.Signature) (*x509.Cer
 	// Verify that the certificate is one we trust
 	if !contains(roots, cert) {
 		return nil, errors.New("Could not verify certificate against trusted certs")
-	}
-
-	if now.Before(cert.NotBefore) || now.After(cert.NotAfter) {
-		return nil, errors.New("Cert is not valid at this time")
 	}
 
 	return cert, nil
